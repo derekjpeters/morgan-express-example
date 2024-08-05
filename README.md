@@ -37,6 +37,7 @@ This project demonstrates the usage of middleware in an Express application, inc
     ```javascript
     const express = require('express');
     const morgan = require('morgan');
+    const path = require('path');
 
     const app = express();
     const port = 3000;
@@ -52,6 +53,14 @@ This project demonstrates the usage of middleware in an Express application, inc
 
     // Apply custom middleware globally
     app.use(customMiddleware);
+
+    // Serve static files (CSS, JS, etc.)
+    app.use(express.static(path.join(__dirname, '.')));
+
+    // Serve the main HTML file
+    app.get('/', (req, res) => {
+        res.sendFile(path.join(__dirname, 'index.html'));
+    });
 
     // Route-level middleware
     app.get('/route', morgan('tiny'), (req, res) => {
@@ -74,9 +83,21 @@ This project demonstrates the usage of middleware in an Express application, inc
         res.send('Custom Morgan middleware');
     });
 
-    // Serve static files
-    app.use(express.static('.'));
+    // Authentication middleware
+    const authMiddleware = (req, res, next) => {
+        const token = req.headers['authorization'];
+        if (token === 'secret-token') {
+            next();
+        } else {
+            res.status(401).send('Unauthorized');
+        }
+    };
 
+    app.get('/protected', authMiddleware, (req, res) => {
+        res.send('This is a protected route');
+    });
+
+    // Start the server
     app.listen(port, () => {
         console.log(`Server running at http://localhost:${port}`);
     });
@@ -90,10 +111,11 @@ This project demonstrates the usage of middleware in an Express application, inc
 
 6. **Open your browser and navigate to `http://localhost:3000` to see the frontend.**
 
-7. **Endpoints to test middleware:**
-    - `/route` - Route with Morgan middleware
-    - `/endpoint` - Endpoint with Morgan middleware
-    - `/custom` - Endpoint with custom Morgan middleware
+7. **Interact with the endpoints:**
+    - Click the "Call /route Endpoint" button to trigger the route with Morgan middleware.
+    - Click the "Call /endpoint Endpoint" button to trigger the endpoint with Morgan middleware.
+    - Click the "Call /custom Endpoint" button to trigger the endpoint with custom Morgan middleware.
+    - Click the "Call /protected Endpoint" button to attempt accessing a protected route (add an `Authorization` header with `secret-token` in a tool like Postman to test).
 
 ## Understanding Middleware
 
