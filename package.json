@@ -1,0 +1,16 @@
+{
+  "name": "morgan-express-example",
+  "version": "1.0.0",
+  "description": "This project demonstrates the usage of middleware in an Express application, including Morgan middleware and custom middleware.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "morgan": "^1.10.0"
+  }
+}
